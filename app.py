@@ -40,12 +40,20 @@ def init_db():
 
 init_db()
 
-# High-Impact Cyberpunk / Glassmorphism CSS Styling
+# High-Impact Cyberpunk / Glassmorphism Live Animated CSS Styling
 st.markdown("""
 <style>
-    /* Dark Gradient Background */
+    @keyframes liveGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Live Animated Background */
     .stApp {
-        background: linear-gradient(135deg, #090d16 0%, #101726 50%, #0d121f 100%);
+        background: linear-gradient(-45deg, #050811, #0f172a, #1e1b4b, #090d16);
+        background-size: 400% 400%;
+        animation: liveGradient 18s ease infinite;
         color: #e2e8f0;
     }
 
@@ -59,14 +67,14 @@ st.markdown("""
     .main-header {
         font-size: 2.2rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0;
     }
     .header-icon {
         color: #38bdf8;
-        filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
     }
 
     /* Pill Badges */
@@ -87,44 +95,48 @@ st.markdown("""
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        backdrop-filter: blur(4px);
     }
 
     /* Glassmorphic Metric Cards */
     [data-testid="stMetric"] {
-        background: rgba(30, 41, 59, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(56, 189, 248, 0.2);
         border-radius: 12px;
         padding: 16px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
     [data-testid="stMetricValue"] {
         font-size: 2.2rem !important;
         color: #38bdf8 !important;
         font-weight: 700;
+        text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
 
     /* Input & Select Box Customizations */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: #1a2333 !important;
+        background-color: rgba(15, 23, 42, 0.8) !important;
         color: #f8fafc !important;
-        border: 1px solid #334155 !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
         border-radius: 8px !important;
     }
 
     /* Button Customization */
     .stButton button {
-        background: linear-gradient(90deg, #0284c7, #4338ca);
+        background: linear-gradient(90deg, #0284c7, #6366f1);
         color: #ffffff;
         font-weight: 600;
         border: none;
         border-radius: 8px;
-        padding: 0.5rem 1.5rem;
+        padding: 0.6rem 1.5rem;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
     }
     .stButton button:hover {
-        background: linear-gradient(90deg, #0369a1, #3730a3);
-        box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+        background: linear-gradient(90deg, #0369a1, #4f46e5);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
+        transform: translateY(-1px);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -167,7 +179,7 @@ with col3:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Tab Navigation with Upgraded Visual Icons
+# Tab Navigation
 tab_brain, tab_hands, tab_feedback = st.tabs([
     "⚙️ Brain (Content Generator)",
     "⚡ Hands (Approval Queue)",
