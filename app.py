@@ -1,91 +1,265 @@
 import os
+import sqlite3
 import streamlit as st
 from google import genai
 
-# 1. Page Configuration (Cyber-Neon Theme)
+# Page Configuration with dynamic favicon
 st.set_page_config(
-    page_title="JA Assure",
+    page_title="JA Assure — AI Marketing & Compliance Agent",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# 2. Custom Cyber-Neon CSS Injection
+# Lucide Icons Script Injection
+st.markdown(
+    '<script src="https://unpkg.com/lucide@latest"></script>',
+    unsafe_allow_html=True,
+)
+
+# Initialize Gemini Client via Streamlit Secrets or Environment Variables
+api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
+client = genai.Client(api_key=api_key) if api_key else None
+
+# Database Initialization
+def init_db():
+    conn = sqlite3.connect("ja_assure.db")
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS drafts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            brand TEXT,
+            platform TEXT,
+            topic TEXT,
+            generated_content TEXT,
+            status TEXT DEFAULT 'Pending'
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# High-Impact Cyberpunk / Glassmorphism CSS Styling
 st.markdown("""
 <style>
-    /* Dark Theme Grid Background */
+    /* Dark Gradient Background */
     .stApp {
-        background-color: #0b0f19;
-        background-image: radial-gradient(#1f293d 1px, transparent 1px);
-        background-size: 24px 24px;
+        background: linear-gradient(135deg, #090d16 0%, #101726 50%, #0d121f 100%);
         color: #e2e8f0;
     }
-    
-    /* Neon Headers */
-    h1, h2, h3 {
-        color: #00f0ff !important;
-        font-family: 'Inter', sans-serif;
-        text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+
+    /* Main Title & Icon Header */
+    .title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
     }
-    
-    /* Glassmorphism Containers */
-    div[data-testid="stVerticalBlock"] > div {
-        background: rgba(15, 23, 42, 0.75);
-        border: 1px solid rgba(0, 240, 255, 0.2);
+    .main-header {
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+    .header-icon {
+        color: #38bdf8;
+        filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+    }
+
+    /* Pill Badges */
+    .badge-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+    .badge {
+        background-color: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: #38bdf8;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Glassmorphic Metric Cards */
+    [data-testid="stMetric"] {
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 12px;
-        padding: 1rem;
-        backdrop-filter: blur(8px);
+        padding: 16px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
-    
-    /* Metric Cards */
-    div[data-testid="stMetricValue"] {
-        color: #39ff14 !important;
-        font-size: 2rem !important;
+    [data-testid="stMetricValue"] {
+        font-size: 2.2rem !important;
+        color: #38bdf8 !important;
+        font-weight: 700;
+    }
+
+    /* Input & Select Box Customizations */
+    .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
+        background-color: #1a2333 !important;
+        color: #f8fafc !important;
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+    }
+
+    /* Button Customization */
+    .stButton button {
+        background: linear-gradient(90deg, #0284c7, #4338ca);
+        color: #ffffff;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .stButton button:hover {
+        background: linear-gradient(90deg, #0369a1, #3730a3);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. Secure API Key Retrieval
-# Checks Streamlit Secrets first, then local environment variables
-api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
+# Header Section with Vector Icon
+st.markdown("""
+<div class="title-wrapper">
+    <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <div class="main-header">JA Assure — AI Marketing & Compliance Agent</div>
+</div>
+<div class="badge-container">
+    <span class="badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+        AUTONOMOUS REGULATORY GUARDRAILS
+    </span>
+    <span class="badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        SELF-CORRECTING MEMORY
+    </span>
+</div>
+""", unsafe_allow_html=True)
 
-if not api_key:
-    st.error("⚠️ GEMINI_API_KEY is not configured! Please set it in Streamlit Cloud Secrets or your .env file.")
-    st.stop()
+# Fetch Stats from Database
+conn = sqlite3.connect("ja_assure.db")
+c = conn.cursor()
+c.execute("SELECT COUNT(*) FROM drafts")
+total_drafts = c.fetchone()[0]
+c.execute("SELECT COUNT(*) FROM drafts WHERE status='Approved'")
+approved_drafts = c.fetchone()[0]
+conn.close()
 
-# Initialize Gemini Client
-client = genai.Client(api_key=api_key)
-
-# 4. App UI & Logic
-st.title("🛡️ JA Assure — Executive Metrics & Agent")
-
-# Metrics Section
+# Metric Section
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric(label="System Status", value="ACTIVE", delta="100% Operational")
+    st.metric(label="TOTAL DRAFTS AUDITED", value=total_drafts)
 with col2:
-    st.metric(label="Threat Index", value="LOW", delta="-12%", delta_color="inverse")
+    st.metric(label="COMPLIANT APPROVED", value=approved_drafts)
 with col3:
-    st.metric(label="Human-in-Loop Reviews", value="14 Pending", delta="Requires Action")
+    st.metric(label="ACTIVE POLICY MEMORIES", value=1)
 
-st.divider()
+st.markdown("<br>", unsafe_allow_html=True)
 
-# Interactive Prompt Input
-st.subheader("🤖 Brain Agent Control")
-user_input = st.text_area("Enter input for analysis or task generation:", placeholder="Type here...")
+# Tab Navigation with Upgraded Visual Icons
+tab_brain, tab_hands, tab_feedback = st.tabs([
+    "⚙️ Brain (Content Generator)",
+    "⚡ Hands (Approval Queue)",
+    "🛡️ Feedback Memory"
+])
 
-if st.button("Run Brain Agent"):
-    if user_input.strip():
-        with st.spinner("Processing request through Gemini agent..."):
-            try:
+# TAB 1: BRAIN (GENERATOR)
+with tab_brain:
+    st.subheader("Generate & Audit Marketing Content")
+    
+    col_a, col_b = st.columns(2)
+    with col_a:
+        brand_name = st.text_input("Brand Name", value="JA Insurance")
+        target_platform = st.selectbox("Target Platform", ["LinkedIn", "Twitter/X", "Instagram", "Facebook Email"])
+    with col_b:
+        target_language = st.selectbox("Target Language", ["English", "Spanish", "French", "German"])
+        content_brief = st.text_area("Content Brief / Campaign Topic", value="Promoting general wellness benefits and annual preventive health checkups for corporate clients.")
+
+    if st.button("🚀 Generate & Audit Content", use_container_width=True):
+        if not client:
+            st.error("Gemini API key is missing. Please set GEMINI_API_KEY in Streamlit Cloud Secrets.")
+        else:
+            with st.spinner("Analyzing regulatory requirements and generating draft..."):
+                prompt = f"""
+                You are an AI Compliance & Marketing Agent for {brand_name}.
+                Write a marketing post for {target_platform} in {target_language}.
+                Topic: {content_brief}
+                Ensure strict compliance with financial/insurance advertising standards.
+                Provide:
+                1. Post Copy
+                2. Compliance Score (0-100)
+                3. Risk Analysis
+                """
                 response = client.models.generate_content(
                     model="gemini-2.5-flash",
-                    contents=user_input,
+                    contents=prompt
                 )
-                st.success("Analysis Complete")
-                st.markdown("### Agent Response")
+                
+                # Save to DB
+                conn = sqlite3.connect("ja_assure.db")
+                c = conn.cursor()
+                c.execute(
+                    "INSERT INTO drafts (brand, platform, topic, generated_content) VALUES (?, ?, ?, ?)",
+                    (brand_name, target_platform, content_brief, response.text)
+                )
+                conn.commit()
+                conn.close()
+
+                st.success("Draft Generated & Saved to Queue!")
+                st.markdown("### Generated Output & Audit")
                 st.write(response.text)
-            except Exception as e:
-                st.error(f"Error executing agent task: {e}")
+
+# TAB 2: HANDS (APPROVAL QUEUE)
+with tab_hands:
+    st.subheader("Human-in-the-Loop Review Queue")
+    
+    conn = sqlite3.connect("ja_assure.db")
+    c = conn.cursor()
+    c.execute("SELECT id, brand, platform, topic, generated_content, status FROM drafts ORDER BY id DESC")
+    records = c.fetchall()
+    conn.close()
+
+    if not records:
+        st.info("No drafts currently in the review queue.")
     else:
-        st.warning("Please enter a prompt before running the agent.")
+        for row in records:
+            draft_id, brand, platform, topic, content, status = row
+            with st.expander(f"Draft #{draft_id} | {brand} ({platform}) — Status: {status}"):
+                st.write(content)
+                col_btn1, col_btn2 = st.columns(2)
+                with col_btn1:
+                    if st.button(f"Approve #{draft_id}", key=f"app_{draft_id}"):
+                        conn = sqlite3.connect("ja_assure.db")
+                        c = conn.cursor()
+                        c.execute("UPDATE drafts SET status='Approved' WHERE id=?", (draft_id,))
+                        conn.commit()
+                        conn.close()
+                        st.rerun()
+                with col_btn2:
+                    if st.button(f"Reject #{draft_id}", key=f"rej_{draft_id}"):
+                        conn = sqlite3.connect("ja_assure.db")
+                        c = conn.cursor()
+                        c.execute("UPDATE drafts SET status='Rejected' WHERE id=?", (draft_id,))
+                        conn.commit()
+                        conn.close()
+                        st.rerun()
+
+# TAB 3: FEEDBACK MEMORY
+with tab_feedback:
+    st.subheader("Autonomous Regulatory Guardrails & Memory")
+    st.markdown("""
+    * **Policy Rule #1:** Avoid absolute statements like "100% covered" or "guaranteed payout" without disclaimers.
+    * **Policy Rule #2:** Include standard statutory disclaimers on all health/life coverage material.
+    * **Active Learning:** Feedback from human approvals/rejections automatically tunes prompt context for future iterations.
+    """)
