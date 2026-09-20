@@ -217,8 +217,9 @@ with tab_brain:
                 2. Compliance Score (0-100)
                 3. Risk Analysis
                 """
+                # Fixed model name to gemini-1.5-flash
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-1.5-flash",
                     contents=prompt
                 )
                 
@@ -266,7 +267,7 @@ with tab_hands:
                     if st.button(f"Reject #{draft_id}", key=f"rej_{draft_id}"):
                         conn = sqlite3.connect("ja_assure.db")
                         c = conn.cursor()
-                        c.execute("UPDATE drafts SET status='Rejected' WHERE id=?", (draft_id,))
+                        c.execute("UPDATE drafts_set status='Rejected' WHERE id=?", (draft_id,))
                         conn.commit()
                         conn.close()
                         st.rerun()
