@@ -217,9 +217,9 @@ with tab_brain:
                 2. Compliance Score (0-100)
                 3. Risk Analysis
                 """
-                # Updated to active gemini-2.5-flash model endpoint
+                # Updated to the exact model requested by the platform error log
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-3.6-flash",
                     contents=prompt
                 )
                 
