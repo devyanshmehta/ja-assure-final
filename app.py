@@ -217,9 +217,9 @@ with tab_brain:
                 2. Compliance Score (0-100)
                 3. Risk Analysis
                 """
-                # Updated to gemini-2.0-flash model identifier
+                # Updated to active gemini-2.5-flash model endpoint
                 response = client.models.generate_content(
-                    model="gemini-2.0-flash",
+                    model="gemini-2.5-flash",
                     contents=prompt
                 )
                 
