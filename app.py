@@ -3,7 +3,7 @@ import sqlite3
 import streamlit as st
 from google import genai
 
-# Page Configuration with dynamic favicon
+# Page Configuration
 st.set_page_config(
     page_title="JA Assure — AI Marketing & Compliance Agent",
     page_icon="🛡️",
@@ -40,21 +40,21 @@ def init_db():
 
 init_db()
 
-# High-Impact Cyberpunk / Glassmorphism Live Animated CSS Styling
+# High-Impact Cyberpunk / High-Contrast Live Animated CSS Styling
 st.markdown("""
 <style>
-    @keyframes liveGradient {
+    @keyframes neonPulse {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
 
-    /* Live Animated Background */
+    /* Highly Noticeable, Vibrant Multi-Color Live Background */
     .stApp {
-        background: linear-gradient(-45deg, #050811, #0f172a, #1e1b4b, #090d16);
-        background-size: 400% 400%;
-        animation: liveGradient 18s ease infinite;
-        color: #e2e8f0;
+        background: linear-gradient(-45deg, #020617, #0f172a, #1e1b4b, #311042, #06283d);
+        background-size: 500% 500%;
+        animation: neonPulse 10s ease infinite;
+        color: #f1f5f9;
     }
 
     /* Main Title & Icon Header */
@@ -65,78 +65,82 @@ st.markdown("""
         margin-bottom: 8px;
     }
     .main-header {
-        font-size: 2.2rem;
+        font-size: 2.4rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+        background: linear-gradient(90deg, #38bdf8, #818cf8, #f43f5e, #38bdf8);
+        background-size: 300% auto;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: neonPulse 6s linear infinite;
         margin: 0;
     }
     .header-icon {
         color: #38bdf8;
-        filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+        filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.9));
     }
 
-    /* Pill Badges */
+    /* Pill Badges with Glow */
     .badge-container {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         margin-bottom: 24px;
     }
     .badge {
-        background-color: rgba(56, 189, 248, 0.1);
-        border: 1px solid rgba(56, 189, 248, 0.4);
+        background-color: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.6);
         color: #38bdf8;
-        padding: 4px 12px;
+        padding: 6px 14px;
         border-radius: 20px;
         font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: 700;
         letter-spacing: 0.05em;
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
     }
 
     /* Glassmorphic Metric Cards */
     [data-testid="stMetric"] {
-        background: rgba(15, 23, 42, 0.65);
-        border: 1px solid rgba(56, 189, 248, 0.2);
-        border-radius: 12px;
-        padding: 16px;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 14px;
+        padding: 18px;
+        backdrop-filter: blur(16px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(56, 189, 248, 0.1);
     }
     [data-testid="stMetricValue"] {
-        font-size: 2.2rem !important;
+        font-size: 2.4rem !important;
         color: #38bdf8 !important;
-        font-weight: 700;
-        text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+        font-weight: 800;
+        text-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
     }
 
     /* Input & Select Box Customizations */
     .stTextInput input, .stTextArea textarea, .stSelectbox div[data-baseweb="select"] {
-        background-color: rgba(15, 23, 42, 0.8) !important;
+        background-color: rgba(15, 23, 42, 0.9) !important;
         color: #f8fafc !important;
-        border: 1px solid rgba(56, 189, 248, 0.3) !important;
-        border-radius: 8px !important;
+        border: 1px solid rgba(56, 189, 248, 0.5) !important;
+        border-radius: 10px !important;
     }
 
-    /* Button Customization */
+    /* Glowing Button Customization */
     .stButton button {
-        background: linear-gradient(90deg, #0284c7, #6366f1);
+        background: linear-gradient(90deg, #0284c7, #6366f1, #ec4899);
+        background-size: 200% auto;
         color: #ffffff;
-        font-weight: 600;
+        font-weight: 700;
         border: none;
-        border-radius: 8px;
-        padding: 0.6rem 1.5rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
+        border-radius: 10px;
+        padding: 0.65rem 1.6rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
     }
     .stButton button:hover {
-        background: linear-gradient(90deg, #0369a1, #4f46e5);
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.7);
-        transform: translateY(-1px);
+        background-position: right center;
+        box-shadow: 0 0 25px rgba(236, 72, 153, 0.8), 0 0 25px rgba(56, 189, 248, 0.8);
+        transform: translateY(-2px);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -144,16 +148,16 @@ st.markdown("""
 # Header Section with Vector Icon
 st.markdown("""
 <div class="title-wrapper">
-    <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+    <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
     <div class="main-header">JA Assure — AI Marketing & Compliance Agent</div>
 </div>
 <div class="badge-container">
     <span class="badge">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
         AUTONOMOUS REGULATORY GUARDRAILS
     </span>
     <span class="badge">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         SELF-CORRECTING MEMORY
     </span>
 </div>
